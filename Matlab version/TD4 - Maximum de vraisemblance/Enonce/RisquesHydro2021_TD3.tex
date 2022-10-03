@@ -1,0 +1,128 @@
+% -*- TeX:FR -*-
+\documentclass[a4paper]{article}
+% NE RIEN MODIFIER DANS LES ENTETES !!!
+% DO NOT MODIFY THIS PART
+\usepackage{lmodern}
+\usepackage{bm}
+
+\usepackage[T1]{fontenc}
+\TeXXeTstate=1 %activer XeTTeX
+\usepackage[utf8]{inputenc}
+\usepackage[body={17cm,25cm},top=2.5cm,left=2.5cm]{geometry}
+
+
+
+%\usepackage[numbers, sort&compress]{natbib}
+\usepackage[dvips]{graphicx}
+
+
+ 
+\usepackage{manfnt}
+\usepackage{stmaryrd}
+\usepackage{textcomp}
+\usepackage{pifont}
+
+
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphics}
+\usepackage{fancyhdr}
+ \usepackage{wrapfig}
+%\usepackage{frenchle} % utiliser de préférence frenchle http://www.efrench.org/doc/frenchle.pdf
+\usepackage[frenchb]{babel} % sinon prendre l'option frenchb dans babel
+% Utilisation du package caption pour changer le nom des titre des tableaux
+\usepackage{caption}
+\captionsetup[table]{name = Tableau}
+
+
+\newcommand{\D}{\mathrm{d}}
+\newcommand{\cube}{$^3$}
+
+
+
+\begin{document}
+\pagestyle{fancy}
+\fancyhead{}
+\chead{\textit{Risques hydrologiques et aménagement du territoire -  2021 -- \textbf{TD 3}} }
+
+\begin{wrapfigure}{r}{0.2\textwidth}
+\vspace{-40pt}
+  \begin{center}
+%\includegraphics[width=0.20\textwidth]{qrcode.eps}
+  \end{center}
+   \vspace{-80pt}
+\end{wrapfigure}
+\huge
+%\begin{center}
+\textsc{\textbf{Maximum de vraisemblance,  inférence \\bayésienne \& Metropolis-Hastings.}}
+
+
+\small
+
+    \vspace{10pt}
+\textbf{Professeur :} Christophe \textsc{Ancey} 
+
+    \vspace{10pt}
+   \textbf{Assistants :} Clemente \textsc{Gotelli}, Mehrdad \textsc{Kiani} \\
+    \vspace{10pt}
+\hrule
+\small
+
+ \section{Ajustement de lois de valeurs extrêmes sur des données (fin du TD précédent)}
+
+ Nous allons maintenant faire un ajustement de loi de valeurs extrêmes sur les données de températures et de précipitations à Davos. Il s'agit de déterminer le type de loi de valeurs extrêmes (Weibull, Gumbel ou Fréchet) qui décrit le mieux le comportement des maxima de chaque série. Dans cet exercice, nous utiliserons directement la fonction gevfit qui estime les paramètres de la loi généralisée des valeurs extrêmes par la méthode du maximum de vraisemblance vue dans l'exercice précédent (voir TD3).
+ Nous procédons de la manière suivante :\\
+  \begin{itemize}
+    \item définissez des blocs (classiquement des années)~;
+    \item calculez le maximum de chaque bloc (donc par exemple le maximum annuel)~;
+    \item utilisez ces maxima pour caler la loi des valeurs extrêmes~;
+    \item tracez cette loi et comparer avec la courbe empirique.
+  \end{itemize}
+  \begin{enumerate}
+  \item Précipitations\\
+    De quel type (Gumbel, Fréchet ou Weibull) est la distribution~?\\
+  \item Températures\\
+Le fichier possède plusieurs colonnes de données, les trois dernières colonnes représentent la température à 7\,h, 13\,h et 21\,h. Choisissez-en une et trouvez la loi de valeurs extrêmes qui convient le mieux pour décrire la distribution des maxima.
+  \end{enumerate}
+
+\section*{Inférence bayésienne, présentation de la méthode}
+
+ Lors du dernier TD nous avons vu comment trouver les paramètres $\theta$ d'une loi pour décrire au mieux $n$ observations $d_i$. Les méthodes employées étaient la méthode des moments qui ajuste les moments des données à ceux de la loi et celle du maximum de vraisemblance qui consiste à maximiser Prob($d_1, d_2, \cdots d_n \left|\right. \theta$). Aujourd'hui nous allons voir une autre méthode basée sur le théorème de Bayes:
+\begin{equation}
+		\textrm{Prob}(\theta\left|\right. \bold{d})=\frac{\textrm{Prob}(\bold{d}\left|\right. \theta) \textrm{Prob}(\theta)}{\int  \textrm{Prob}(\bold{d}\left|\right. \theta) d \theta}
+\label{eq1}
+\end{equation}
+En d'autres termes, la probabilité  que les paramètres soient $\theta$ est proportionnelle à la vraisemblance $\textrm{Prob}(\bold{d}\left|\right. \theta)$ pondérée par $\textrm{Prob}(\theta)$. $\textrm{Prob}(\theta)$ est la probabilité à priori d'avoir $\theta$, et est appelée le prior. Cette loi $\textrm{Prob}(\theta)$ est déduite d'une connaissance experte ou d'un précédent calage, si ni l'une ni l'autre de ces informations n'est disponible on utilise une loi uniforme. \\
+L'algorithme d'Hastings-Metropolis permet de trouver quels paramètres $\theta$ maximisent l'équation 1, pour cela on se promène sur $Q(\theta)=\textrm{Prob}(\theta \left|\right. \bold{d})$ par sauts successifs. Si $Q(\theta_{i+1}) \geq Q(\theta_{i})$ on accepte toujours le saut car on se dirige vers des vraisemblances plus élevées, dans le cas contraire on accepte le saut avec une certaine probabilité. Peu à peu, saut après saut, nous allons donc approcher des maxima de $Q(\theta)$ sans pour autant avoir une probabilité nulle de redescendre (ce qui permet de sortir d'un éventuel maxima secondaire par exemple). Les sauts sont contrôlés par la loi de probabilité instrumentale que l'on note ici $q$ et que l'on va considérer, pour simplifier, comme symétrique (i.e. $q(\theta_{i+1}\left|\right.\theta_i)=q(\theta_i\left|\right.\theta_{i+1})=q(\left|\theta_{i+1}-\theta_i\right|)$). De manière plus explicite:
+\begin{enumerate}
+	\item On part d'un état $\theta_0$.
+    \item On tire une valeur candidate selon la loi $q(\theta_{i+1}\left|\right.\theta_i)$.
+	\item On définit un taux d'acceptation $r$ de la manière suivante:
+	\[
+	r=min\left[\frac{Q(\theta_{i+1})}{Q(\theta_{i})},1\right]
+	\]
+    A cette étape, on voit que l'intégrale se simplifie dans le quotient. Notons aussi que cette expression est plus complexe lorsque la loi de probabilité instrumentale n'est pas symétrique.
+	\item On accepte les paramètres $\theta_{i+1}$ (c'est-à-dire on fait le saut) avec une probabilité $r$.
+	\item On répète la procédure jusqu'à convergence.
+\end{enumerate}
+
+\section{Algorithme d'Hastings-Metropolis}
+\begin{enumerate}
+	\item Pour commencer, générez $N=20$ valeurs tirées aléatoirement selon une loi de poisson de paramètre $\lambda=2$. Ces valeurs représentent les données sur lesquelles nous allons caler une loi de poisson et essayer de retrouver le paramètre $\lambda=2$ utilisé pour générer ces valeurs. \textbf{[poissrnd]}
+	\item Codez l'algorithme d'Hastings-Metropolis. Pour cela faîtes une boucle qui va de $1$ jusqu'a \texttt{nPas}, le nombre de sauts autorisé (p. ex. $3000$). A chaque itération $i$, calculez le nouveau candidat potentiel $\theta_{p}$ ainsi que le paramètre d'acceptation $r$ correspondant.
+Comme loi instrumentale $q$, on prendra une loi normale d'espérance $\theta_{i}$ et d'écart-type 0,01. Considérant que nous n'avons pas de connaissances a priori, le prior sera pris uniforme dans un premier temps (par exemple selon une loi U(0,100)). Pour éviter des erreurs numériques lors du calcul de $r$, utilisez la log-vraisemblance:
+	\[
+	r=\frac{Q(\theta_{p})}{Q(\theta_{i})}= \exp\left[ l(\theta_{p})+\ln \textrm{Prob}(\theta_{p})-l(\theta_{i})-\ln \textrm{Prob}(\theta_{i})\right]
+	\]
+	où $l(\theta)$ est la log-vraisemblance.\\ Une fois $\theta_{p}$ déterminé et $r$ calculé en conséquence, il faut effectuer un test: si $r \geq 1$ on accepte dans tous les cas la nouvelle position (car on monte) et $\theta_{i+1}=\theta_{p}$, sinon on accepte  $\theta_{i+1}$ avec une probabilité $r$ uniquement. Pour coder le taux d'acceptation $r<1$ on procède de la manière suivante: on tire une valeur aléatoire $u$ d'une distribution uniforme (cela se fait facilement dans Matlab avec la commande \texttt{rand}); si $r>u$ alors on accepte  $\theta_{p}$, si $r<u$ on reste sur la position $\theta_{i}$.
+	\item A chaque itération, enregistrez la position $\theta_{i}$ dans un vecteur $\bold{D_{0}}$, lorsque les $nPas$ sont effectués faites un graph de ce vecteur et calculez la moyenne de celui-ci (restreignez cette moyenne à la partie convergente du vecteur, par exemple les $1500$ derniers points).
+	\item Comparez le résultat obtenu avec ce que l'on obtient en utilisant la commande Matlab \texttt{poissfit} sur le même set de donnée.
+	\item Introduisez à présent un prior de type gaussien centré en $2$ et d'écart type 0,1. Calculez ensuite le vecteur $\bold{D}$ correspondant et superposez sur un graph $\bold{D}$ et $\bold{D_{0}}$, qu'observez-vous ?
+	\item Changez $N$, augmentez le à une valeur supérieur (par exemple $100$) et refaites cette comparaison (prior uniforme vs prior centré en $2$); augmentez encore $N$ à $200$, que remarquez-vous?
+	\item Introduisez un prior de type gaussien centré en 0,5 et d'écart type 0,1. Que constatez-vous pour $N=20,100,200$? Faîtes la même chose pour un prior complètement erroné (par exemple centré en $5$ et d'écart type $1$), que constatez-vous pour $N=20,100,200$?
+\end{enumerate}
+
+
+\end{document}

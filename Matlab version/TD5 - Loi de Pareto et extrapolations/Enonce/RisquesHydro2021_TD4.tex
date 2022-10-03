@@ -1,0 +1,139 @@
+% -*- TeX:FR -*-
+\documentclass[a4paper]{article}
+% NE RIEN MODIFIER DANS LES ENTETES !!!
+% DO NOT MODIFY THIS PART
+\usepackage{lmodern}
+\usepackage{bm}
+
+\usepackage[T1]{fontenc}
+\TeXXeTstate=1 %activer XeTTeX
+\usepackage[utf8]{inputenc}
+\usepackage[body={17cm,25cm},top=2.5cm,left=2.5cm]{geometry}
+
+
+
+%\usepackage[numbers, sort&compress]{natbib}
+\usepackage[dvips]{graphicx}
+
+
+ 
+\usepackage{manfnt}
+\usepackage{stmaryrd}
+\usepackage{textcomp}
+\usepackage{pifont}
+
+
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphics}
+\usepackage{fancyhdr}
+ \usepackage{wrapfig}
+%\usepackage{frenchle} % utiliser de préférence frenchle http://www.efrench.org/doc/frenchle.pdf
+\usepackage[frenchb]{babel} % sinon prendre l'option frenchb dans babel
+% Utilisation du package caption pour changer le nom des titre des tableaux
+\usepackage{caption}
+\captionsetup[table]{name = Tableau}
+
+
+\newcommand{\D}{\mathrm{d}}
+\newcommand{\cube}{$^3$}
+
+
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\chead{\textit{Risques hydrologiques et aménagement du territoire - 2021 -- \textbf{TD 4}} }
+
+
+
+\huge
+%\begin{center}
+\textsc{\textbf{Séance 4 :  Loi de Pareto et extrapolations}}
+%\end{center}
+
+
+% \vspace{35pt}
+\small
+   \vspace{10pt}
+    \textbf{Professeur :} Christophe \textsc{Ancey} 
+
+    \vspace{10pt}
+   \textbf{Assistants :} Clemente \textsc{Gotelli}, Mehrdad \textsc{Kiani} \\
+    \vspace{10pt}
+\hrule
+\small
+
+\section*{Ajustements et extrapolations}
+
+Nous allons comparer ici la pluie centennale à Davos obtenue par extrapolation grâce aux quatre méthodes vues en cours, à savoir :\\
+
+\begin{itemize}
+ \item \textbf{Méthodes à seuils:} Méthode du renouvellement et loi généralisée de Pareto
+
+ \item \textbf{Méthodes par blocs : }Méthodes des moments et du maximum de vraisemblance
+
+\end{itemize}
+\section{Méthode du renouvellement}
+On rappelle que la méthode du renouvellement cherche à représenter les évènements extrêmes grâce à une loi de Poisson (comptabilisant le nombre d'évènements pour une période donnée) et une loi exponentielle (traduisant la distribution de ces évènements dans le temps). \\~\\ Pour une période de retour $T$ très grande, on obtient le quantile en fonction de la période de retour grâce à la formule suivante:\\
+\begin{equation}\label{renouv}
+ C=s+\frac{\mbox{ln}\lambda}{\mu}+\frac{1}{\mu}\mbox{ln}T+O(T^{-1})
+\end{equation}
+Avec les paramètres :
+\begin{itemize}
+ \item $\lambda=n_s/n_a$
+ \item $\mu=1/(\tilde{C}-s)$
+\end{itemize}
+\begin{enumerate}
+\item Tracer l'histogramme des précipitations à Davos couvrant $n_a$ années et déterminer à priori une valeur $s$ du seuil possible. Ne retenir que les $n_s$ précipitations dépassant le seuil par la suite.
+\item Classer les valeurs de l'échantillon par ordre croissant et calculer $\tilde{C}$, sa moyenne empirique.
+\item A chaque valeur de l'échantillon de rang $i$, on affecte la période de retour :
+\begin{equation}
+ T_i=\frac{n_a}{n_s}\frac{n_s+1}{i}
+\end{equation}
+\item Calculer les paramètres $\lambda$ et $\mu$, puis tracer dans un diagramme $(T,C)$ la variation du quantile $C$ en fonction de la période de retour $T$, grâce à la l'équation 1. Comparer avec les valeurs empiriques.
+\item Quel est la valeur de la pluie centennale ? $C_{100}=$
+\item Changer le seuil tel que $s_2>s$ puis $s_3<s$, et tracer les lois obtenues sur la même fenêtre. Quelle influence cela a t-il sur l'extrapolation? Comment choisir un « bon~» seuil selon vous?
+\end{enumerate}
+\section{Loi de Pareto}
+\small \textit{~\\ Vilfredo Pareto, né le 15 juillet 1848 à Paris et mort le 19 août 1923 à Céligny (Suisse), est un sociologue et économiste italien. Il demeure célèbre pour son observation des 20 \% de la population qui possèdent 80 \% des richesses en Italie, généralisée plus tard en distribution de Pareto. Cette observation a été étendue à d'autres domaines sous le terme de « principe de Pareto ».  Il définit la notion d'optimum paretien comme une situation d'ensemble dans laquelle un individu ne peut améliorer sa situation sans détériorer celle d'un autre individu. \\
+ \vspace{5pt}}
+
+La loi de Pareto s'exprime ainsi :
+\begin{equation}
+ G(x)=1-{\left(1+\frac{\tilde{\xi}x}{\tilde{\sigma}}\right)}^{-1/\tilde{\xi}}
+\end{equation}
+On cherche à déterminer ses paramètres. On peut obtenir que pour tout seuil $s>s_0$, l'équation suivante est vérifiée :
+\begin{equation}
+	E[X-s|X>s] = \frac{\tilde{\sigma_s}}{1-\tilde{\xi}} = \frac{\tilde{\sigma_{s_0}} +
+\tilde{\xi}(s-s_0)}{1-\tilde{\xi}}
+\end{equation}
+$\tilde{\xi}/(1-\tilde{\xi})$ est donc la pente et $(\tilde{\sigma_{s_0}} -
+\tilde{\xi}s_0)/(1-\tilde{\xi})$ l'ordonnée à l'origine de la fonction $f(s)=E[X-s|X>s]$ \\
+\begin{enumerate}
+\item Tracer $E(X-s|X>s)$ en fonction de $s$ et déterminer a priori sur quel domaine le
+paramètre $\tilde{\xi}$ pourra être ajusté. \textit{(calculer la moyenne de la distance des valeurs qui dépassent le seuil par rapport à ce même seuil)}
+\item Pour un domaine fixé, calculer les paramètres de la loi de Pareto qui approchent le mieux cette distribution (vous pouvez utiliser la commande \texttt{polyfit}). Tracer la droite ajustée sur le même graphique que $f(s)$. A quelle type de loi de valeurs extrêmes peut-on comparer la loi de Pareto ?
+\item Tracer le quantile $x_{p}(T)$ ainsi ajusté et comparer le aux données de l'échantillon.
+\begin{equation}
+\begin{split}
+\mbox{si }\tilde{\xi}\ne 0, x_p(T) &=
+s+ \frac{\tilde{\sigma}}{\tilde{\xi}}\left(\left(T\frac{n_s}{n_a}\right)^{\tilde{\xi}}-1\right) \\
+  \mbox{si } \tilde{\xi} =0, x_p(T) &= s+\tilde{\sigma}\mbox{ln}\left(T\frac{n_s}{n_a}\right)
+ \end{split}
+\end{equation}
+\item Ajuster maintenant les paramètres de la loi de Pareto grâce à la méthode d'optimisation de votre choix pour 3 seuils différents (max. de vraisemblance, Hasting-Metropolis, méthode des moments, etc) \textbf{[gpfit]}
+\item Reproduire ces résultats sur un même graphique et les comparer.
+\item Donner la valeur du quantile extrapolé $C_{100}=$
+\end{enumerate}
+
+\section{Maximum de vraisemblance}
+\begin{enumerate}
+ \item Calculer les maxima annuels.
+ \item Ajuster une loi de valeurs extrêmes grâce au maximum de vraisemblance.
+\item Tracer sur la même figure, le quantile obtenu $x_{ev}(T)$ via la méthode par bloc et les quantiles $x_{p}(T)$ et $C_s(T)$ obtenus via les méthodes à seuil. Conclure.
+\end{enumerate}
+\end{document}

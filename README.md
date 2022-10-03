@@ -1,2 +1,4 @@
 # ENV524
-TDs in Jupyter notebook files for the course ENV-524 Risques hydrologiques et aménagements. EPFL - Laboratory of Environmental Hydraulics 
+ENV524 - Risques hydrologiques et aménagement du territoire
+
+Last modified on: `October 3rd, 2022`

@@ -1,0 +1,182 @@
+% -*- TeX:FR -*-
+\documentclass[a4paper]{article}
+% NE RIEN MODIFIER DANS LES ENTETES !!!
+% DO NOT MODIFY THIS PART
+\usepackage{lmodern}
+\usepackage{bm}
+
+\usepackage[T1]{fontenc}
+\TeXXeTstate=1 %activer XeTTeX
+\usepackage[utf8]{inputenc}
+\usepackage[body={17cm,25cm},top=2.5cm,left=2.5cm]{geometry}
+
+
+
+%\usepackage[numbers, sort&compress]{natbib}
+\usepackage[dvips]{graphicx}
+
+
+ 
+\usepackage{manfnt}
+\usepackage{stmaryrd}
+\usepackage{textcomp}
+\usepackage{pifont}
+
+
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphics}
+\usepackage{fancyhdr}
+ \usepackage{wrapfig}
+%\usepackage{frenchle} % utiliser de préférence frenchle http://www.efrench.org/doc/frenchle.pdf
+\usepackage[frenchb]{babel} % sinon prendre l'option frenchb dans babel
+% Utilisation du package caption pour changer le nom des titre des tableaux
+\usepackage{caption}
+\captionsetup[table]{name = Tableau}
+
+
+\newcommand{\D}{\mathrm{d}}
+\newcommand{\cube}{$^3$}
+
+
+
+\begin{document}
+\pagestyle{fancy}
+\fancyhead{}
+\chead{\textit{Risques hydrologiques et aménagement du territoire -  2021 -- \textbf{TD 2}} }
+        \begin{center}
+        {\LARGE \textbf{Ajustement de lois}}
+        \end{center}
+
+
+\small
+
+    \vspace{10pt}
+\textbf{Professeur :} Christophe \textsc{Ancey} 
+
+    \vspace{10pt}
+   \textbf{Assistants :} Clemente \textsc{Gotelli}, Mehrdad \textsc{Kiani} \\
+    \vspace{10pt}
+\hrule
+\small
+
+
+\begin{center}
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|l|l|l|l|}
+\hline
+Loi & Expression & Moyenne & Variance \\
+\hline
+
+Poisson &  $P(\lambda)(k)=\frac{\lambda^k}{k!}e^{-\lambda}$ & $\lambda$ & $\lambda$ \\
+
+Binômiale négative &  $Neg(r,p)(k)=\frac{\Gamma(k + r)}{k!\Gamma(r)}p^r(1-p)^k$& $k(1-p)/p$ & $ k(1-p)/p^2$ \\
+
+Log-normale &  $LogN(\mu,\sigma)(x)=\frac{1}{x\sigma\sqrt{2\pi}} \exp \left( -\left[\mbox{ln}(x)-\mu\right]^2/(2\sigma^2)\right)$ & $e^{\mu+\sigma^2/2}$ &  $(e^{\sigma^2}-1)e^{2\mu+\sigma^2}$ \\
+
+Gamma &  $G(\lambda,\kappa)(x)=\frac{\lambda ^\kappa}{\Gamma(\kappa)}x^{\kappa-1}e^{-\lambda x}$ &   $k /\lambda$ & $  k /\lambda^2$ \\
+
+Normale &   $N(\mu,\sigma)(x)=\frac{1}{\sqrt{2 \pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$ & $\mu$ & $\sigma^2$ \\
+
+Exponentielle & $E(\lambda)(x)=\lambda e^{-\lambda x}$ &$1/\lambda$&$1/\lambda^2$\\
+
+valeurs extrêmes &  $P(\mu,\sigma,\xi)(x)=\exp\left[-\left(1+\xi\cdot\frac{x-\mu}{\sigma}\right)^{1/\xi}\right]$ & - & - \\
+
+
+\hline
+\end{tabular}
+\caption{Quelques lois de probabilités.}
+\end{center}
+\end{table}
+\end{center}
+
+
+\section {Méthode des moments \textit{(rappel séance 1)}}
+
+L'ajustement le plus simple est de chercher la loi ayant les mêmes moments que les données. Les moments des données sont :\\
+\begin{center}
+\begin{tabular}{c|rl}
+moyenne ($1^{er}$ moment) & $E=\int X dP$ &= $\frac 1N \sum x_i$ \\ \hline
+variance ($2^{e}$ moment) & $\sigma^2=\int (X-\mu)^{2} dP$ & $= \frac 1N \sum (x_i-\mu)^{2}$ \\
+\hline
+{\centering $\vdots$} & $\vdots$ & $\vdots$
+\end{tabular}
+
+\end{center}
+\noindent Le nombre de paramètres de la loi donne le nombre de moments à égaliser. Trois séries de données (\textit{serie01.txt, serie02.txt et serie03.txt}) ont été obtenues lors d'expériences et on cherche à leur affecter l'une des lois de probabilité suivante : loi log-normale, loi binomiale négative et loi de Poisson.\\
+ \begin{enumerate}
+ \item Donner les principales caractéristiques de ces trois lois (on pourra s'aider d'internet), à savoir le nombre de paramètres, la moyenne et la variance. Quelles sont leurs particularités respectives$\;$?
+%Rep: Poisson et NegBin sont a valeurs entières. Poisson a une moyenne égale à sa variance tandis que la NegBin a une variance supérieure à sa moyenne. Log normale est une loi à valeur réelles superieures à  zero dont la décroissance est faible, c'est à dire la variance élevé et pouvant prenre des valeurs extrèmes.
+ \item Calculer les densités de probabilité (pdf) de ces trois séries et tracer les avec leurs pdf théoriques ajustées à l'aide de la méthode des moments.
+ \textbf{[hist, lognpdf, poisspdf, nbinpdf]}
+ %Rep: Serie 1: NegBin, Serie 2: Poisson, Serie 3 : log normale
+ \item Pour chacune de ces séries, tracer un diagramme quantile experimental/quantile théorique ainsi que la droite $y=x$. \textbf{[ecdf, logninv, poissinv, nbininv]}
+ \item Que dire de ce diagramme pour la série 3$\;$?
+%Rep: Les valeurs extrêmes ne sont pas bien représenté, mais cela ne veut pas dire que la loi ajustée est mauvaise, seulement qu'on ne dispose pas suffisamment de donnée pour ce type de série à très large variance
+% >> [x,y]=ecdf(serie);
+% >> plot(logninv(x,mu,sigma),y,'b.');
+% >> hold on
+% >> plot(y,y,'r-');
+ \end{enumerate}
+ 
+ \section{Méthode du maximum de vraisemblance}	
+ 
+Nous allons dans cette section appliquer la méthode du maximum de vraisemblance aux données \textit{seriegamma.txt}. Nous voulons ici caler une loi Gamma à deux paramètres.
+\begin{enumerate}
+\item  Pour commencer nous allons créer une fonction Matlab qui calcule l'opposée de la log-vraisemblance $l(\kappa,\lambda)$ lorsqu'on lui donne les paramètres $(\kappa,\lambda)$ et les données $x_i$. La vraisemblance est définie de la manière suivante:
+
+\begin{equation*}
+L(\kappa,\lambda) = \prod_{i=1}^N G_a[\lambda,\kappa](x_i).
+\end{equation*}
+  
+\begin{itemize}
+\item Calculer \textbf{analytiquement} la fonction $l(\kappa,\lambda,x_i)=-$ln$(L)$ et simplifier au maximum son expression.
+\item Pour créer une fonction dans matlab, il faut créer un fichie \textit{mafonction.m}. (cf premier TD) La syntaxe est ensuite du type :\\~\\
+    \verb!function lvrai = mafonction(l,k,x)!\\
+    \verb!   lvrai = - (l * k * x *... ;  % à modifier... !\\
+    \verb!end!\\~\\
+Une fois cette fonction créée, la commande matlab \texttt{mafonction(l,k,x)} vous donne l'opposé de la valeur de la log-vraisemblance correspondant au triplet $(l,k,x)$.
+
+\item Modifier l'exemple ci-dessus avec l'expression analytique trouvée.\\
+
+\end{itemize}
+    
+\item Nous allons ensuite chercher le minimum de la fonction créée avec la fonction: \\~\\ \verb! k=fminbnd(@(k) mafonction(l,k,x),inf,sup) !\\~\\ Ici, on cherche la valeur de $k$ qui minimise \textit{mafonction}. \textit{inf} est la borne inférieure de recherche et \textit{sup} la borne supérieure. Comme notre fonction a deux paramètres, nous allons effectuer une recherche par itérations. L'algorithme est le suivant :\\
+
+\begin{itemize}
+ \item fixer un paramètre $l$ arbitrairement$\;$;
+ \item pour i=1...10$\;$:
+ \begin{itemize}
+  \item calculer $k$ avec la fonction fminbnd$\;$,
+  \item calculer $l$ avec la fonction fminbnd en prenant $k$ trouvé à l'étape précédente.
+ \end{itemize}
+\item fin de la boucle.
+\end{itemize}
+
+
+\item Coder cet algorithme. L'algorithme converge t'il~? Tracer la densité de probabilité de la loi ajustée, et la comparer à celle obtenue grâce à la méthode des moments.
+
+\end{enumerate}
+
+\section{Ajustement de lois de valeurs extrêmes sur des données}
+
+Nous allons maintenant faire un ajustement de loi de valeurs extrêmes sur les données de températures et de précipitations à Davos. Il s'agit de déterminer le type de loi de valeurs extrêmes (Weibull, Gumbel ou Fréchet) qui décrit le mieux le comportement des maxima de chaque série. Dans cette exercice, nous utiliserons directement la fonction gevfit qui estime les paramètres de la loi généralisée des valeurs extrêmes par la méthode du maximum de vraisemblance vue dans l'exercice précédent.
+ Nous procédons de la manière suivante :\\
+  \begin{itemize}
+    \item définir des blocs (classiquement des années)~;
+    \item calculer le maximum de chaque bloc (donc par exemple le maximum annuel)~;
+    \item utiliser ces maxima pour caler la loi des valeurs extrêmes~;
+    \item tracez cette loi et comparer avec la courbe empirique.
+  \end{itemize}
+  \begin{enumerate}
+  \item \textbf{Précipitations} \\
+De quel type (Gumbel, Fréchet ou Weibull) est la distribution~?\\
+  \item \textbf{Températures} \\
+Le fichier possède plusieurs colonnes de données, les trois dernières colonnes représentent la température à 7~h, 13~h et 21~h. Choisissez-en une et trouver la loi de valeurs extrêmes qui convient le mieux pour décrire la distribution des maxima.
+  \end{enumerate}
+
+
+\end{document}

@@ -1,0 +1,165 @@
+% -*- TeX:FR -*-
+\documentclass[a4paper,12pt]{article}
+% NE RIEN MODIFIER DANS LES ENTETES !!!
+% DO NOT MODIFY THIS PART
+\usepackage{lmodern}
+\usepackage{bm}
+
+\usepackage[T1]{fontenc}
+\TeXXeTstate=1 %activer XeTTeX
+\usepackage[utf8]{inputenc}
+\usepackage[body={17cm,25cm},top=2.5cm,left=2.5cm]{geometry}
+
+
+
+%\usepackage[numbers, sort&compress]{natbib}
+\usepackage[dvips]{graphicx}
+
+
+
+\usepackage{manfnt}
+\usepackage{stmaryrd}
+\usepackage{textcomp}
+\usepackage{pifont}
+
+
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphics}
+\usepackage{fancyhdr}
+ \usepackage{wrapfig}
+%\usepackage{frenchle} % utiliser de préférence frenchle http://www.efrench.org/doc/frenchle.pdf
+%\usepackage[frenchb]{babel} % sinon prendre l'option frenchb dans babel
+
+
+\newcommand{\D}{\mathrm{d}}
+\newcommand{\cube}{$^3$}
+
+
+
+\begin{document}
+\pagestyle{fancy}
+\fancyhead{}
+\chead{\textit{Risques hydrologiques et aménagement du territoire - 29 Octobre 2021}}
+
+
+%\begin{wrapfigure}{r}{0.2\textwidth}
+%\vspace{-20pt}
+%  \begin{center}
+% \includegraphics[width=0.125\textwidth]{Jackpot.eps}
+%  \end{center}
+%   \vspace{-20pt}
+%\end{wrapfigure}
+
+\huge
+\textsc{\textbf{Séance 1 : Ajustement de lois}}
+
+\small
+ \vspace{10pt}
+     \textbf{Professeur :} Christophe \textsc{Ancey} 
+
+    \vspace{10pt}
+  \textbf{Assistants :} Clemente \textsc{Gotelli, }Mehrdad \textsc{Kiani}\\ 
+    \vspace{10pt}
+\hrule
+\small
+%
+ 
+
+\section{Lois de probabilités et ajustements}
+\subsection {Ajustement d'une loi}
+
+L'ajustement le plus simple est de chercher la loi ayant les mêmes moments que
+les séries de données. Les moments de la série sont :\\
+\vskip0.5cm
+\begin{center}
+\begin{tabular}{c rl}
+Moyenne ($1^{\mathrm{er}}$ moment) & $\mu=\int X dP$ &= $\displaystyle\frac 1N \sum x_i$ \\ 
+Variance ($2^{\mathrm{ème}}$ moment) & $\sigma^{2}=\int (X-\mu)^{2} dP$ & $=\displaystyle \frac 1N \sum (x_i-\mu)^{2}$ \\  
+{\centering $\vdots$} & $\vdots$ & $\vdots$
+\end{tabular}\\
+\vskip0.5cm
+\end{center}
+Le nombre de paramètres de la loi donne le nombre de moments à égaliser. Trois
+séries de données (\textit{serie01.txt, serie02.txt et serie03.txt}) ont été
+obtenues lors d'expériences et on cherche à les caractériser à l'aide d'une loi de
+probabilités (loi uniforme, loi exponentielle, loi gaussienne, loi de Cauchy, loi gamma, etc.).
+(Voir Annexe 1 du cours pour une description de ces lois) \\
+
+\begin{enumerate}
+
+\item Tracer premièrement l'histogramme normalisé de chacun de ces
+tirages. Leurs allures vous paraissent-elles familières ?
+\item Calculer leurs premiers moments.
+\item Comparer les densités de probabilité théoriques aux histogrammes de
+données.
+\item Pour les données \textit{serie03.txt}, tracer un diagramme de quantile
+avec la loi trouvée précédemment et comparer le avec la bissectrice. La loi trouvée vous
+parait-elle adaptée? \texttt{[qqplot]}
+
+\end{enumerate}
+
+
+\subsection{Loi binômiale et loi de Poisson}
+
+La loi binômiale (notée $\mathbf{B}$) vient de la somme de $m$ variables aléatoires de type Bernoulli de paramètre $p$. Pour un nombre de succès petit, celle-ci peut être
+approchée par une loi de Poisson (notée $\mathbf{P}$), plus simple dans la pratique. Mais sous quelles conditions ?
+\begin{enumerate}
+ \item $p$ fixé.
+\begin{itemize}
+ \item Tracer en fonction de $k$ la probabilité $P(X=k) $ avec $X
+ \simeq \mathbf{B}(100\ ;\ 0,1)$ pour $ k=1 \cdots 30$
+ \item Tracer en fonction de $k$ la probabilité $P(X=k)$ avec $X
+ \simeq \mathbf{P}(100 \cdot 0,1)$ pour $ k=1 \cdots 30$\end{itemize}
+\item $k$ fixé.
+\begin{itemize}
+ \item Tracer en fonction de $p$ la probabilité $P(X=5) $ avec $X
+ \simeq \mathbf{B}(100\ ;\ p)$ pour $ p=0,01 \cdots 0,2$
+ \item Tracer (sur la même figure) en fonction de $p$ la probabilité $P(X=5)$ avec $X
+ \simeq \mathbf{P}(100 \cdot p)$ pour $ p=0,01 \cdots 0,2$
+\end{itemize}
+\item Condition sur $p$ pour $k \in [0\ ;\ 20]$.
+\begin{itemize}
+ \item Calculer le maximum de l'erreur relative sur $P(X=k)$ entre la loi binômiale
+et la loi de Poisson pour $ p=0,01 \cdots 0,2$. On tracera le graphique de
+l'erreur en fonction de $p$.
+\item Trouver la condition sur $p$ pour que l'erreur absolue entre les deux
+lois soit de moins de $10$~\% quel que soit $k$ ?
+\end{itemize}
+\item \textit{Question facultative :} les paramètres $k$ et $p$ ont tous les deux
+une influence sur la valeur de l'erreur commise entre ces deux lois. Tracer un
+graphique 3D du logarithme de l'erreur en fonction de $p$ et de $k$ pour $p \in
+[0,001\ ;\ 0,5]$ et $k \in [1\ ;\ 50]$. Concluez. \texttt{[meshgrid,mesh]}
+ \end{enumerate}
+
+\section{Le paradoxe de Pétersbourg}
+
+Un joueur va au casino pour faire fortune. Grâce à son cours de probabilité, il a développé une stratégie qu'il pense infaillible : il commence par miser la mise minimale sur une couleur (rouge ou noire). Quand il perd il rejoue en doublant son enjeu. S'il perd  à nouveau il double une nouvelle fois son enjeu, etc. Une fois qu'il a gagné, il recommence avec la mise minimale.\\ Cette stratégie est-elle payante ? \\
+Plus prudent que le joueur, vous lui proposez de simuler cette stratégie avant de l'appliquer :
+
+\begin{itemize}
+\item La fortune au début est de 100 fois la mise minimale, l'enjeu de
+départ est alors 1. Tant que sa fortune est supérieure à l'enjeu que lui impose sa
+stratégie, il joue.
+	\begin{itemize}
+	  \item Il perd avec une probabilité de $P=0,5$ ; la mise est doublée, sa fortune diminue de la mise perdue;
+	  \item Il gagne avec une probabilité de $P=0,5$ : la mise retombe à 1 et sa fortune  augmente de la mise ;
+	\end{itemize}
+	\item Comme le joueur n'est pas trop téméraire, il s'arrête de jouer lorsqu'il a
+doublé sa fortune initiale.
+      \end{itemize}
+      \begin{enumerate}
+	\item Simuler cette stratégie. Faire un diagramme de sa fortune.
+	\item Enregistrer la fortune finale et calculer la moyenne.
+      \end{enumerate}
+
+\textit{ Explication du paradoxe :\\
+Pour mettre en évidence l'aspect paradoxal de ce problème, il faut considérer que, quelle que soit la mise initiale, l'espérance mathématique de gain est positive, et même infinie, pour le joueur. Pourtant, tout quidam sain d'esprit refusera de jouer à un tel jeu si la mise initiale est trop élevée. Ce comportement d'apparence irrationnelle s'appelle l'aversion au risque. Il a été formalisé par la notion de fonction d'utilité et a donné naissance à la théorie de la décision.\\
+Une solution simple à ce paradoxe consiste à faire l'hypothèse réaliste que la banque n'est pas infiniment riche, et qu'elle va donc cesser de payer au-delà d'une certaine somme. Par exemple, si on suppose qu'elle ne dispose << que >> de 4 000 000 CHF soit
+$2^{22}$ CHF, le jeu va cesser au 22$^{\mathrm{ème}}$ coup et la mise équitable sera alors de 22 CHF.}
+
+
+
+\end{document}
